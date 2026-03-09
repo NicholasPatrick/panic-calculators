@@ -1,0 +1,17 @@
+[package]
+name = "panic-calculators"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[[bin]]
+name = "pcalc"
+path = "src/main.rs"
+
+[dependencies]
+console_error_panic_hook = "0.1.7"
+libm = "0.2.16"
+malachite = "0.7.0"
+wasm-bindgen = "0.2.106"
