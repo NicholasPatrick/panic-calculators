@@ -109,6 +109,7 @@ pub fn fibonacci(a: Natural, m: Natural) -> Natural {
         y %= &m;
         if *i {
             y += &x;
+            y %= &m;
             swap(&mut x, &mut y);
         }
     }
