@@ -1,6 +1,13 @@
 use panic_calculators::{
-    combinatorics::{derangement_string, factorial_string, fibonacci_string, partition_string, permutation_string},
-    number_theory::{factor_string, gcd_string, geometric_series_string, is_prime_string, kronecker_symbol_string, lcm_string, modex_string, sum}, statistics::binomial_greater_string,
+    combinatorics::{
+        derangement_string, factorial_string, fibonacci_string, partition_string,
+        permutation_string,
+    },
+    number_theory::{
+        factor_string, gcd_string, geometric_series_string, is_prime_string,
+        kronecker_symbol_string, lcm_string, modex_string, sum,
+    },
+    statistics::binomial_greater_string,
 };
 use std::env;
 
@@ -42,7 +49,12 @@ fn main() {
     if args.len() == 6 && args[1] == "geom_series" {
         println!(
             "{}",
-            geometric_series_string(args[2].clone(), args[3].clone(), args[4].clone(), args[5].clone())
+            geometric_series_string(
+                args[2].clone(),
+                args[3].clone(),
+                args[4].clone(),
+                args[5].clone()
+            )
         );
         return;
     }

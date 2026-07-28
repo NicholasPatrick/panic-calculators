@@ -1,8 +1,7 @@
 use core::f64;
-use std::f64::consts::{E, TAU};
 use libm::{erfc, sqrt};
+use std::f64::consts::{E, TAU};
 use wasm_bindgen::prelude::*;
-
 
 pub fn stirling(n: u32) -> f64 {
     if n <= 1 {
@@ -33,9 +32,7 @@ fn betacf(a: f64, b: f64, x: f64) -> f64 {
     for m in 1..=MAXIT {
         let m2 = 2 * m;
 
-        let mut aa =
-            (m as f64) * (b - m as f64) * x /
-            ((qam + m2 as f64) * (a + m2 as f64));
+        let mut aa = (m as f64) * (b - m as f64) * x / ((qam + m2 as f64) * (a + m2 as f64));
 
         d = 1.0 + aa * d;
         if d.abs() < FPMIN {
@@ -48,8 +45,7 @@ fn betacf(a: f64, b: f64, x: f64) -> f64 {
         d = 1.0 / d;
         h *= d * c;
 
-        aa = -(a + m as f64) * (qab + m as f64) * x /
-            ((a + m2 as f64) * (qap + m2 as f64));
+        aa = -(a + m as f64) * (qab + m as f64) * x / ((a + m2 as f64) * (qap + m2 as f64));
 
         d = 1.0 + aa * d;
         if d.abs() < FPMIN {
@@ -80,12 +76,10 @@ fn betai(a: f64, b: f64, x: f64) -> f64 {
         return 1.0;
     }
 
-    let bt = ((libm::lgamma(a + b)
-        - libm::lgamma(a)
-        - libm::lgamma(b))
+    let bt = ((libm::lgamma(a + b) - libm::lgamma(a) - libm::lgamma(b))
         + a * x.ln()
         + b * (1.0 - x).ln())
-        .exp();
+    .exp();
 
     if x < (a + 1.0) / (a + b + 2.0) {
         bt * betacf(a, b, x) / a

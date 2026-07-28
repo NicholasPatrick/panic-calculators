@@ -61,8 +61,16 @@ pub fn geometric_series_z(a: Integer, r: Integer, n: Natural, m: Natural) -> Nat
     if m <= 1 {
         return Natural::ZERO;
     }
-    let a = if a < 0 {&m - a.unsigned_abs() % &m} else {a.unsigned_abs() % &m};
-    let r = if r < 0 {&m - r.unsigned_abs() % &m} else {r.unsigned_abs() % &m};
+    let a = if a < 0 {
+        &m - a.unsigned_abs() % &m
+    } else {
+        a.unsigned_abs() % &m
+    };
+    let r = if r < 0 {
+        &m - r.unsigned_abs() % &m
+    } else {
+        r.unsigned_abs() % &m
+    };
     geometric_series_n(a, r, n, m)
 }
 
@@ -275,7 +283,13 @@ pub fn modex_string(a: String, b: String, m: String) -> String {
 
 #[wasm_bindgen]
 pub fn geometric_series_string(a: String, r: String, n: String, m: String) -> String {
-    geometric_series_z(a.parse().unwrap(), r.parse().unwrap(), n.parse().unwrap(), m.parse().unwrap()).to_string()
+    geometric_series_z(
+        a.parse().unwrap(),
+        r.parse().unwrap(),
+        n.parse().unwrap(),
+        m.parse().unwrap(),
+    )
+    .to_string()
 }
 
 #[wasm_bindgen]

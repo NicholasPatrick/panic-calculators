@@ -6,7 +6,8 @@ use malachite::{
         arithmetic::traits::{
             ModAddAssign, ModMulPrecomputed, ModMulPrecomputedAssign, ModSubAssign, Square,
         },
-        basic::traits::{One, Zero}, logic::traits::BitConvertible,
+        basic::traits::{One, Zero},
+        logic::traits::BitConvertible,
     },
 };
 use wasm_bindgen::prelude::*;
@@ -101,7 +102,7 @@ pub fn fibonacci(a: Natural, m: Natural) -> Natural {
     }
     let mut x = Natural::ONE;
     let mut y = Natural::ONE;
-    for i in (a-Natural::ONE).to_bits_desc().iter().skip(1) {
+    for i in (a - Natural::ONE).to_bits_desc().iter().skip(1) {
         let diff = (&x << 1) + &m - &y;
         x = (&x).square() + (&y).square();
         y *= diff;
