@@ -1,6 +1,5 @@
 use malachite::base::num::arithmetic::traits::*;
 use malachite::base::num::basic::traits::{One, Two, Zero};
-use malachite::base::num::conversion::traits::SaturatingFrom;
 use malachite::base::num::factorization::traits::Primes;
 use malachite::base::num::logic::traits::*;
 use malachite::*;
@@ -9,7 +8,7 @@ use std::iter::Product;
 use std::ops::*;
 use wasm_bindgen::prelude::*;
 
-pub fn modex(mut a: Natural, mut b: Natural, m: Natural) -> Natural {
+pub fn modex_n(mut a: Natural, mut b: Natural, m: Natural) -> Natural {
     if m == 0 {
         return m;
     }
@@ -26,14 +25,14 @@ pub fn modex(mut a: Natural, mut b: Natural, m: Natural) -> Natural {
     r
 }
 
-pub fn modex_integer(a: Integer, b: Integer, m: Natural) -> Natural {
+pub fn modex_z(a: Integer, b: Integer, m: Natural) -> Natural {
     if m <= 1 {
         return Natural::ZERO;
     }
     let mut nat_a = if a < 0 {
-        &m - Natural::saturating_from(-a) % &m
+        &m - a.unsigned_abs() % &m
     } else {
-        Natural::saturating_from(a) % &m
+        a.unsigned_abs() % &m
     };
     if b < 0 {
         match nat_a.mod_inverse(&m) {
@@ -41,10 +40,10 @@ pub fn modex_integer(a: Integer, b: Integer, m: Natural) -> Natural {
             None => return m,
         }
     }
-    modex(nat_a, b.unsigned_abs_ref().clone(), m)
+    modex_n(nat_a, b.unsigned_abs_ref().clone(), m)
 }
 
-pub fn geometric_series(a: Natural, r: Natural, n: Natural, m: Natural) -> Natural {
+pub fn geometric_series_n(a: Natural, r: Natural, n: Natural, m: Natural) -> Natural {
     if m <= 1 || n == 0 {
         return Natural::ZERO;
     }
@@ -52,22 +51,22 @@ pub fn geometric_series(a: Natural, r: Natural, n: Natural, m: Natural) -> Natur
         return a;
     }
     if n.even() {
-        geometric_series(a * (&r + Natural::ONE) % &m, &r * &r % &m, n >> 1, m)
+        geometric_series_n(a * (&r + Natural::ONE) % &m, &r * &r % &m, n >> 1, m)
     } else {
-        (&a + geometric_series(&a * &r % &m, r, n - Natural::ONE, m.clone())) % m
+        (&a + geometric_series_n(&a * &r % &m, r, n - Natural::ONE, m.clone())) % m
     }
 }
 
-pub fn geometric_series_integer(a: Integer, r: Integer, n: Natural, m: Natural) -> Natural {
+pub fn geometric_series_z(a: Integer, r: Integer, n: Natural, m: Natural) -> Natural {
     if m <= 1 {
         return Natural::ZERO;
     }
-    let a = if a < 0 {&m - Natural::saturating_from(-a) % &m} else {Natural::saturating_from(a) % &m};
-    let r = if r < 0 {&m - Natural::saturating_from(-r) % &m} else {Natural::saturating_from(r) % &m};
-    geometric_series(a, r, n, m)
+    let a = if a < 0 {&m - a.unsigned_abs() % &m} else {a.unsigned_abs() % &m};
+    let r = if r < 0 {&m - r.unsigned_abs() % &m} else {r.unsigned_abs() % &m};
+    geometric_series_n(a, r, n, m)
 }
 
-pub fn is_prime(n: Natural) -> bool {
+pub fn is_prime_n(n: Natural) -> bool {
     if n < 4 {
         return n > 1;
     }
@@ -84,7 +83,7 @@ pub fn is_prime(n: Natural) -> bool {
         if a.significant_bits() == 0 {
             continue;
         }
-        a = modex(a, q.clone(), n.clone());
+        a = modex_n(a, q.clone(), n.clone());
         if a == 1 {
             continue;
         }
@@ -100,6 +99,10 @@ pub fn is_prime(n: Natural) -> bool {
         }
     }
     true
+}
+
+pub fn is_prime_z(n: Integer) -> bool {
+    is_prime_n(n.unsigned_abs())
 }
 
 pub fn kronecker_symbol(n: Integer, k: Integer) -> i8 {
@@ -214,7 +217,7 @@ pub fn factor(mut n: Natural) -> (Vec<(Natural, u32)>, Natural) {
     let mut given_up = vec![];
     while !to_factor.is_empty() {
         let n = to_factor.pop().unwrap();
-        if is_prime(n.clone()) {
+        if is_prime_n(n.clone()) {
             ret.push((n, 1));
             continue;
         }
@@ -267,17 +270,17 @@ pub fn kronecker_symbol_string(a: String, b: String) -> String {
 
 #[wasm_bindgen]
 pub fn modex_string(a: String, b: String, m: String) -> String {
-    modex_integer(a.parse().unwrap(), b.parse().unwrap(), m.parse().unwrap()).to_string()
+    modex_z(a.parse().unwrap(), b.parse().unwrap(), m.parse().unwrap()).to_string()
 }
 
 #[wasm_bindgen]
 pub fn geometric_series_string(a: String, r: String, n: String, m: String) -> String {
-    geometric_series_integer(a.parse().unwrap(), r.parse().unwrap(), n.parse().unwrap(), m.parse().unwrap()).to_string()
+    geometric_series_z(a.parse().unwrap(), r.parse().unwrap(), n.parse().unwrap(), m.parse().unwrap()).to_string()
 }
 
 #[wasm_bindgen]
 pub fn is_prime_string(n: String) -> String {
-    is_prime(n.parse().unwrap()).to_string()
+    is_prime_z(n.parse().unwrap()).to_string()
 }
 
 #[wasm_bindgen]
