@@ -2,12 +2,10 @@ use panic_calculators::{
     combinatorics::{
         derangement_string, factorial_string, fibonacci_string, partition_string,
         permutation_string,
-    },
-    number_theory::{
+    }, expression_parser::parse_to_int, number_theory::{
         factor_string, gcd_string, geometric_series_string, is_prime_string,
         kronecker_symbol_string, lcm_string, modex_string, sum,
-    },
-    statistics::binomial_greater_string,
+    }, statistics::binomial_greater_string,
 };
 use std::env;
 
@@ -105,6 +103,19 @@ fn main() {
         return;
     }
 
+    if args.len() >= 3 && args[1] == "evaluate" {
+        let mut query_string = String::new();
+        for arg in &args[2..] {
+            query_string.push_str(arg);
+        }
+        let result = parse_to_int(&query_string);
+        match result {
+            Ok(result) => println!("{}", result),
+            Err(err) => println!("Error: {}", err),
+        }
+        return;
+    }
+
     eprintln!("Usage: sum <a> <b>");
     eprintln!("Usage: gcd <a> <b>");
     eprintln!("Usage: lcm <a> <b>");
@@ -119,4 +130,5 @@ fn main() {
     eprintln!("Usage: permutation <a> <b> <m>");
     eprintln!("Usage: fibonacci <a> <m>");
     eprintln!("Usage: binomial_greater <n> <k> <p>");
+    eprintln!("Usage: evaluate <query string>");
 }
