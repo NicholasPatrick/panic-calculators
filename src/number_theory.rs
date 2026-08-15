@@ -8,6 +8,8 @@ use std::iter::Product;
 use std::ops::*;
 use wasm_bindgen::prelude::*;
 
+use crate::expression_parser::{parse_to_int, parse_to_natural};
+
 pub fn modex_n(mut a: Natural, mut b: Natural, m: Natural) -> Natural {
     if m == 0 {
         return m;
@@ -252,54 +254,110 @@ pub fn factor(mut n: Natural) -> (Vec<(Natural, u32)>, Natural) {
 
 #[wasm_bindgen]
 pub fn sum(a: String, b: String) -> String {
-    let a: Integer = a.parse().unwrap();
-    let b: Integer = b.parse().unwrap();
+    let a = match parse_to_int(&a) {
+        Ok(a) => a,
+        Err(err) => return format!("Error parsing a: {err}"),
+    };
+    let b = match parse_to_int(&b) {
+        Ok(b) => b,
+        Err(err) => return format!("Error parsing b: {err}"),
+    };
     (a + b).to_string()
 }
 
 #[wasm_bindgen]
 pub fn gcd_string(a: String, b: String) -> String {
-    let a: Natural = a.parse().unwrap();
-    let b: Natural = b.parse().unwrap();
+    let a = match parse_to_natural(&a) {
+        Ok(a) => a,
+        Err(err) => return format!("Error parsing a: {err}"),
+    };
+    let b = match parse_to_natural(&b) {
+        Ok(b) => b,
+        Err(err) => return format!("Error parsing b: {err}"),
+    };
     a.gcd(b).to_string()
 }
 
 #[wasm_bindgen]
 pub fn lcm_string(a: String, b: String) -> String {
-    let a: Natural = a.parse().unwrap();
-    let b: Natural = b.parse().unwrap();
+    let a = match parse_to_natural(&a) {
+        Ok(a) => a,
+        Err(err) => return format!("Error parsing a: {err}"),
+    };
+    let b = match parse_to_natural(&b) {
+        Ok(b) => b,
+        Err(err) => return format!("Error parsing b: {err}"),
+    };
     a.lcm(b).to_string()
 }
 
 #[wasm_bindgen]
 pub fn kronecker_symbol_string(a: String, b: String) -> String {
-    kronecker_symbol(a.parse().unwrap(), b.parse().unwrap()).to_string()
+    let a = match parse_to_int(&a) {
+        Ok(a) => a,
+        Err(err) => return format!("Error parsing a: {err}"),
+    };
+    let b = match parse_to_int(&b) {
+        Ok(b) => b,
+        Err(err) => return format!("Error parsing b: {err}"),
+    };
+    kronecker_symbol(a, b).to_string()
 }
 
 #[wasm_bindgen]
 pub fn modex_string(a: String, b: String, m: String) -> String {
-    modex_z(a.parse().unwrap(), b.parse().unwrap(), m.parse().unwrap()).to_string()
+    let a = match parse_to_int(&a) {
+        Ok(a) => a,
+        Err(err) => return format!("Error parsing a: {err}"),
+    };
+    let b = match parse_to_int(&b) {
+        Ok(b) => b,
+        Err(err) => return format!("Error parsing b: {err}"),
+    };
+    let m = match parse_to_natural(&m) {
+        Ok(m) => m,
+        Err(err) => return format!("Error parsing m: {err}"),
+    };
+    modex_z(a, b, m).to_string()
 }
 
 #[wasm_bindgen]
 pub fn geometric_series_string(a: String, r: String, n: String, m: String) -> String {
-    geometric_series_z(
-        a.parse().unwrap(),
-        r.parse().unwrap(),
-        n.parse().unwrap(),
-        m.parse().unwrap(),
-    )
-    .to_string()
+    let a = match parse_to_int(&a) {
+        Ok(a) => a,
+        Err(err) => return format!("Error parsing a: {err}"),
+    };
+    let r = match parse_to_int(&r) {
+        Ok(r) => r,
+        Err(err) => return format!("Error parsing r: {err}"),
+    };
+    let n = match parse_to_natural(&n) {
+        Ok(n) => n,
+        Err(err) => return format!("Error parsing n: {err}"),
+    };
+    let m = match parse_to_natural(&m) {
+        Ok(m) => m,
+        Err(err) => return format!("Error parsing m: {err}"),
+    };
+    geometric_series_z(a, r, n, m).to_string()
 }
 
 #[wasm_bindgen]
 pub fn is_prime_string(n: String) -> String {
-    is_prime_z(n.parse().unwrap()).to_string()
+    let n = match parse_to_int(&n) {
+        Ok(n) => n,
+        Err(err) => return format!("Error parsing n: {err}"),
+    };
+    is_prime_z(n).to_string()
 }
 
 #[wasm_bindgen]
 pub fn factor_string(n: String) -> String {
-    let factors = factor(n.parse().unwrap());
+    let n = match parse_to_natural(&n) {
+        Ok(n) => n,
+        Err(err) => return format!("Error parsing n: {err}"),
+    };
+    let factors = factor(n);
     let mut ret = "".to_string();
     for (p, e) in factors.0 {
         if !ret.is_empty() {

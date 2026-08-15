@@ -12,6 +12,8 @@ use malachite::{
 };
 use wasm_bindgen::prelude::*;
 
+use crate::expression_parser::parse_to_natural;
+
 pub fn partition(a: u32, m: Natural) -> Natural {
     if m <= 1 {
         return Natural::ZERO;
@@ -119,25 +121,85 @@ pub fn fibonacci(a: Natural, m: Natural) -> Natural {
 
 #[wasm_bindgen]
 pub fn partition_string(a: String, m: String) -> String {
-    partition(a.parse().unwrap(), m.parse().unwrap()).to_string()
+    let a = match parse_to_natural(&a) {
+        Ok(a) => a,
+        Err(err) => return format!("Error parsing a: {err}"),
+    };
+    let a: u32 = match (&a).try_into() {
+        Ok(a) => a,
+        Err(_) => return format!("a exceed 2^32-1"),
+    };
+    let m = match parse_to_natural(&m) {
+        Ok(m) => m,
+        Err(err) => return format!("Error parsing m: {err}"),
+    };
+    partition(a, m).to_string()
 }
 
 #[wasm_bindgen]
 pub fn factorial_string(a: String, m: String) -> String {
-    factorial(a.parse().unwrap(), m.parse().unwrap()).to_string()
+    let a = match parse_to_natural(&a) {
+        Ok(a) => a,
+        Err(err) => return format!("Error parsing a: {err}"),
+    };
+    let a: u32 = match (&a).try_into() {
+        Ok(a) => a,
+        Err(_) => return format!("a exceed 2^32-1"),
+    };
+    let m = match parse_to_natural(&m) {
+        Ok(m) => m,
+        Err(err) => return format!("Error parsing m: {err}"),
+    };
+    factorial(a, m).to_string()
 }
 
 #[wasm_bindgen]
 pub fn derangement_string(a: String, m: String) -> String {
-    derangement(a.parse().unwrap(), m.parse().unwrap()).to_string()
+    let a = match parse_to_natural(&a) {
+        Ok(a) => a,
+        Err(err) => return format!("Error parsing a: {err}"),
+    };
+    let a: u32 = match (&a).try_into() {
+        Ok(a) => a,
+        Err(_) => return format!("a exceed 2^32-1"),
+    };
+    let m = match parse_to_natural(&m) {
+        Ok(m) => m,
+        Err(err) => return format!("Error parsing m: {err}"),
+    };
+    derangement(a, m).to_string()
 }
 
 #[wasm_bindgen]
 pub fn permutation_string(a: String, b: String, m: String) -> String {
-    permutation(a.parse().unwrap(), b.parse().unwrap(), m.parse().unwrap()).to_string()
+    let a = match parse_to_natural(&a) {
+        Ok(a) => a,
+        Err(err) => return format!("Error parsing a: {err}"),
+    };
+    let b = match parse_to_natural(&b) {
+        Ok(b) => b,
+        Err(err) => return format!("Error parsing b: {err}"),
+    };
+    let b: u32 = match (&b).try_into() {
+        Ok(b) => b,
+        Err(_) => return format!("b exceed 2^32-1"),
+    };
+    let m = match parse_to_natural(&m) {
+        Ok(m) => m,
+        Err(err) => return format!("Error parsing m: {err}"),
+    };
+    permutation(a, b, m).to_string()
 }
 
 #[wasm_bindgen]
 pub fn fibonacci_string(a: String, m: String) -> String {
-    fibonacci(a.parse().unwrap(), m.parse().unwrap()).to_string()
+    let a = match parse_to_natural(&a) {
+        Ok(a) => a,
+        Err(err) => return format!("Error parsing a: {err}"),
+    };
+    let m = match parse_to_natural(&m) {
+        Ok(m) => m,
+        Err(err) => return format!("Error parsing m: {err}"),
+    };
+    fibonacci(a, m).to_string()
 }

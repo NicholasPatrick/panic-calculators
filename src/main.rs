@@ -2,10 +2,13 @@ use panic_calculators::{
     combinatorics::{
         derangement_string, factorial_string, fibonacci_string, partition_string,
         permutation_string,
-    }, expression_parser::parse_to_int, number_theory::{
+    },
+    expression_parser::parse_to_int,
+    number_theory::{
         factor_string, gcd_string, geometric_series_string, is_prime_string,
         kronecker_symbol_string, lcm_string, modex_string, sum,
-    }, statistics::binomial_greater_string,
+    },
+    statistics::binomial_greater_string,
 };
 use std::env;
 
